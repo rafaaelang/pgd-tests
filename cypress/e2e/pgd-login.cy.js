@@ -8,7 +8,7 @@ describe('Teste Login PGD', () => {
 
     // Preenche o campo senha
     cy.get('input[type="password"]').type('Mjr99212199@@@')
-
+ 
     // Clica no botão entrar
     cy.get('#btnLogin').click()
 
@@ -20,8 +20,8 @@ describe('Teste Login PGD', () => {
       cy.get('a.btn.btn-primary').click()
     })
 
-    // Seleciona o perfil "Participante"
-    cy.contains('label', 'Participante').click()
+    // Seleciona o perfil "Administrador"
+    cy.contains('label', 'Administrador').click()
 
     // Clica no botão "Entrar"
     cy.contains('button', 'Entrar').click()
