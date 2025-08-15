@@ -20,8 +20,8 @@ describe('Teste Login PGD', () => {
       cy.get('a.btn.btn-primary').click()
     })
 
-    // Seleciona o perfil "Administrador"
-    cy.contains('label', 'Administrador').click()
+    // Seleciona o perfil "Chefia"
+    cy.contains('label', 'Chefia').click()
 
     // Clica no botão "Entrar"
     cy.contains('button', 'Entrar').click()

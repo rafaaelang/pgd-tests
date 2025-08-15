@@ -1,52 +1,44 @@
 describe('Teste Login PGD', () => {
-
-  it('Login, navegação e solicitação de Plano de Trabalho', () => {
-
+  it('Realiza login, acessa Plano de Trabalho, seleciona Participante e unidade DSUSP', () => {
     cy.visit('https://hmlpgd.mj.gov.br/Login')
 
+    // --- Login ---
+    cy.get('#Sigla', { timeout: 15000 })
+      .should('be.visible')
+      .type(Cypress.env('PGD_USER') || 'rafael.souza5')
 
-
-    // Login
-
-    cy.get('#Sigla', { timeout: 10000 }).should('be.visible')
-
-    cy.get('#Sigla').type('rafael.souza5')
-
-    cy.get('input[type="password"]').type('Mjr99212199@@@')
+    cy.get('input[type="password"]')
+      .type(Cypress.env('PGD_PASS') || 'Mjr99212199@@@', { log: false })
 
     cy.get('#btnLogin').click()
+    cy.url().should('not.include', '/Login')
 
+    // --- Acessa Plano de Trabalho ---
+    cy.contains('div.card-body', 'Plano de Trabalho', { timeout: 15000 })
+      .should('be.visible')
+      .within(() => cy.get('a.btn.btn-primary').click())
 
+    // --- Seleciona perfil Participante ---
+    cy.get('#perfilSolicitante').check({ force: true }) // garante que marca o radio
+    cy.contains('button', 'Entrar').click()
 
-    // Acesso ao Plano de Trabalho
-
-    cy.contains('div.card-body', 'Plano de Trabalho').within(() => {
-
-      cy.get('a.btn.btn-primary').click()
-
-    })
-
-
-
-    // Seleção do perfil
-
-    cy.url().should('include', '/SelecionarPerfil')
-
-    cy.contains('label', 'Participante').click()
-
-    cy.get('button').contains('Entrar').click()
-
-
-
-    // Seleção da unidade
-
+    // --- Seleção de Unidade ---
     cy.url().should('include', '/SelecionarUnidade')
 
-    cy.get('select#IdUnidade').select('Diretoria do Sistema Único de Segurança Pública')
+    // Garante que o select apareceu
+    cy.get('select#IdUnidade', { timeout: 15000 }).should('be.visible')
 
-    cy.get('button').contains('Entrar').click()
+    // Confirma que a opção DSUSP existe
+    cy.get('select#IdUnidade')
+      .find('option[value="1963"]', { timeout: 15000 })
+      .should('exist')
 
+    // Seleciona DSUSP por value
+    cy.get('select#IdUnidade').select('1963', { force: true })
+      .should('have.value', '1963')
 
+    // Clica no Entrar da seleção de unidade
+    cy.contains('button', 'Entrar').click()
 
     // Abre menu Plano de Trabalho e clica em "Solicitar"
 
@@ -119,4 +111,3 @@ describe('Teste Login PGD', () => {
   })
 
 })
-
