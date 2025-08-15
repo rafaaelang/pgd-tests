@@ -80,8 +80,6 @@ describe('Teste Login PGD', () => {
 
     }
 
-
-
     const today = new Date()
 
     today.setDate(today.getDate() - 10)
@@ -98,15 +96,39 @@ describe('Teste Login PGD', () => {
 
       .should('be.visible')
 
-      .invoke('val', formattedDate)   // Define o valor
+      .invoke('val', formattedDate)  
 
-      .trigger('change')              // Dispara evento para o sistema reconhecer alteração
+      .trigger('change')    
 
 
-
-    // Validação opcional
+    // Validação 
 
     cy.get('input[name="DataPrevistaInicio"]').should('have.value', formattedDate)
+
+
+    // --- Grupo de atividade: selecionar "Articulação institucional"
+    cy.get('#IdGrupoAtividade', { timeout: 15000 })
+    .should('be.visible')
+    .select('Articulação institucional'); // pelo texto visível
+
+    // Confere se ficou selecionado
+    cy.get('#IdGrupoAtividade option:selected')
+    .should('contain', 'Articulação institucional');
+
+    // --- Atividade: selecionar a opção do print
+    // Abre o componente (TomSelect) do campo "Atividade"
+    cy.get('#IdAtividade', { timeout: 15000 }).should('exist')
+    cy.get('#IdAtividade').next('.ts-wrapper').find('.ts-control').click()
+
+    // Clica na opção "Oferta de formações de prevenção ..." (conforme o print)
+    cy.get('#IdAtividade-ts-dropdown .option', { timeout: 10000 })
+    .contains('Oferta de formações de prevenção')
+    .click({ force: true })
+
+    // Valida que aplicou a seleção (o value costuma ser o data-value "12951")
+    cy.get('#IdAtividade').should('have.value', '12951')
+
+
 
   })
 
