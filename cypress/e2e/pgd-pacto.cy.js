@@ -128,8 +128,37 @@ describe('Teste Login PGD', () => {
     // Valida que aplicou a seleção (o value costuma ser o data-value "12951")
     cy.get('#IdAtividade').should('have.value', '12951')
 
+    // --- TIPO DE CONTRIBUIÇÃO: selecionar opção "Contribuição não vinculada..."
+    cy.get('#TipoProdutoDropdown', { timeout: 15000 })
+      .should('be.visible')
+     .select('2'); // value da opção no HTML
 
+    // valida o texto selecionado
+    cy.get('#TipoProdutoDropdown option:selected')
+      .should('contain', 'Contribuição não vinculada diretamente a entrega');
 
-  })
+    // --- Cadeia de valor: selecionar 
+    cy.get('#IdCadeiaValor', { timeout: 15000 })
+    .should('be.visible')
+    .select('8') // value da opção que desejar
 
-})
+    // Confere se aplicou corretamente
+    cy.get('#IdCadeiaValor option:selected')
+    .should('contain', 'Governança, Gestão e Suporte')
+
+    // Macroprocesso: Selecionar
+    cy.get('#IdMacroprocesso', { timeout: 15000 })
+    .should('be.visible')
+    .select('33') // valor da opção que desejar
+
+    //Confere se aplicou corretamente
+    cy.get('#IdMacrorocesso option:selected')
+    .should('contain', 'Comunicação')
+
+    // --- Processo: selecionar "Gerenciar a comunicação institucional" (value 145)
+    cy.get('#IdProcesso', { timeout: 15000 })
+    .scrollIntoView()
+    .should('be.visible')
+    .click(); // dá foco/abre o select
+});
+});
